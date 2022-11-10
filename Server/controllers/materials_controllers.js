@@ -1,6 +1,22 @@
 import Loan from '../Models/Loan.js';
 import Materials from '../Models/Material.js'
 
+
+
+export  function getMaterials(req, res) {
+    console.log("before")
+    try{
+        console.log("before")
+        const material =  Materials.findAll()
+        console.log("after")
+        res.status(200).json({material:material})
+    }
+    catch(error){
+        console.log(error)
+    }
+}
+
+
 export async function createMaterials(req, res) {
     try {
         const { name, type } = req.body
