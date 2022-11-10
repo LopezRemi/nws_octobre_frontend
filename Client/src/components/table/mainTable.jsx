@@ -45,18 +45,18 @@ const useStyles = makeStyles({
 });
 
 function compare(a, b) {
-  if (a.lastName.toLowerCase() < b.lastName.toLowerCase()) return -1;
-  if (a.lastName.toLowerCase() > b.lastName.toLowerCase()) return 1;
+  if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
+  if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
   return 0;
 }
 
-function UserTable() {
+function MainTable() {
   const classes = useStyles();
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [editUser, setEditUser] = useState();
-  const [delUser, setDelUser] = useState();
+  const [editMaterial, seteditMaterial] = useState();
+  const [delMaterial, setDelMaterial] = useState();
   const [open, setOpen] = useState(false);
   const [type, setType] = useState("success");
   const [message, setMessage] = useState("");
@@ -91,13 +91,13 @@ function UserTable() {
     setMessage(message);
   };
 
-  const onUpdate = (user) => {
-    setEditUser(user);
+  const onUpdate = (material) => {
+    seteditMaterial(material);
     setModalUpdate(true);
   };
 
-  const onDelete = (user) => {
-    setDelUser(user);
+  const onDelete = (material) => {
+    setDelMaterial(material);
     setModalDelete(true);
   };
 
@@ -106,6 +106,7 @@ function UserTable() {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+
 
   return (
     <>
@@ -146,7 +147,7 @@ function UserTable() {
                   </TableSortLabel>
                 </TCell>
                 <TCell>type</TCell>
-                <TCell>Type</TCell>
+                <TCell>Loué</TCell>
                 <TCell />
               </TableRow>
             </TableHead>
@@ -178,12 +179,15 @@ function UserTable() {
                   ).map((material) => (
                     <TableRow
                       hover
-                      key={material.id}
+                      key={material._id}
                     >
                       <TableCell>{material.name}</TableCell>
                       <TableCell>{material.type}</TableCell>
                       <TableCell></TableCell>
                       <TableCell align="right">
+                      <IconButton color="success" >
+                          Location
+                        </IconButton>
                         <IconButton color="info" onClick={() => onUpdate(material)}>
                           <Edit />
                         </IconButton>
@@ -235,7 +239,7 @@ function UserTable() {
       <UpdateModal
         open={modalUpdate}
         setOpen={setModalUpdate}
-        editUser={editUser}
+        editMaterial={editMaterial}
         notify={notify}
       />
       {/* )} */}
@@ -243,7 +247,7 @@ function UserTable() {
       <DeleteModal
         open={modalDelete}
         setOpen={setModalDelete}
-        delUser={delUser}
+        delMaterial={delMaterial}
         notify={notify}
       />
 
@@ -252,4 +256,4 @@ function UserTable() {
   );
 }
 
-export default UserTable;
+export default MainTable;

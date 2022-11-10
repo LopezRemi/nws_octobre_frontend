@@ -2,23 +2,23 @@ import React, { useEffect } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { Stack, TextField, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { updateUser } from "../../service/";
+import { updateMaterial } from "../../service/";
 import Modal from "react-modal";
 import { useForm } from "react-hook-form";
 
 function UpdateModal(props) {
-  const { open, setOpen, editUser, notify } = props;
+  const { open, setOpen, editMaterial, notify } = props;
   const { register, unregister, handleSubmit, formState } = useForm({
     mode: "onSubmit",
   });
 
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading } = useMutation(updateUser, {
+  const { mutate, isLoading } = useMutation(updateMaterial, {
     onSuccess: () => {
-      queryClient.invalidateQueries("allUsers");
+      queryClient.invalidateQueries("allMaterials");
       setOpen(false);
-      notify("success", "L'utilisateur a bien été mis à jour");
+      notify("success", "le Matériel a bien été mis à jour");
     },
     onError: () => {
       notify("error", "Un problème est survenu lors de la mise à jour");
@@ -27,10 +27,10 @@ function UpdateModal(props) {
 
   useEffect(() => {
     unregister("update");
-  }, [editUser, unregister]);
+  }, [editMaterial, unregister]);
 
   const onSubmit = (data) => {
-    mutate({ id: editUser.id, user: data.update });
+    mutate({ id: editMaterial._id, material: data.update });
   };
 
   return (
@@ -53,40 +53,26 @@ function UpdateModal(props) {
     >
       <>
         <Typography variant="h4" align="center" sx={{ marginBottom: "10px" }}>
-          Edition de l'utilisateur
+          Edition du Matériel
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack>
             <TextField
-              name="lastName"
+              name="name"
               label="Nom"
-              defaultValue={editUser?.lastName}
+              defaultValue={editMaterial?.name}
               margin="normal"
-              error={!!formState.errors?.update?.lastName}
-              helperText={formState.errors?.update?.lastName?.message}
-              {...register("update.lastName", { required: "Champs requis" })}
+              error={!!formState.errors?.update?.name}
+              helperText={formState.errors?.update?.name?.message}
+              {...register("update.name", { required: "Champs requis" })}
             />
             <TextField
-              label="Prénom"
-              defaultValue={editUser?.firstName}
+              label="type"
+              defaultValue={editMaterial?.type}
               margin="normal"
-              error={!!formState.errors?.update?.firstName}
-              helperText={formState.errors?.update?.firstName?.message}
-              {...register("update.firstName", { required: "Champs requis" })}
-            />
-            <TextField
-              label="Email"
-              defaultValue={editUser?.email}
-              margin="normal"
-              error={!!formState.errors?.update?.email}
-              helperText={formState.errors?.update?.email?.message}
-              {...register("update.email", {
-                required: "Champs requis",
-                pattern: {
-                  value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-                  message: "Le format n'est pas correct",
-                },
-              })}
+              error={!!formState.errors?.update?.type}
+              helperText={formState.errors?.update?.type?.message}
+              {...register("update.type", { required: "Champs requis" })}
             />
             <LoadingButton
               variant="contained"

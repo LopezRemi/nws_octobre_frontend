@@ -4,21 +4,21 @@ import { Stack, TextField, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import Modal from "react-modal";
 import { useForm } from "react-hook-form";
-import { createUser } from "../../service";
+import { createMaterial } from "../../service";
 
 function AddModal(props) {
   const { open, setOpen, notify } = props;
 
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading } = useMutation(createUser, {
+  const { mutate, isLoading } = useMutation(createMaterial, {
     onSuccess: () => {
-      queryClient.invalidateQueries("allUsers");
+      queryClient.invalidateQueries("allMaterials");
       setOpen(false);
-      notify("success", "Utilisateur ajouté");
+      notify("success", "Matériel ajouté");
     },
     onError: (error) => {
-      var message = "Un problème est survenu lors de l'ajout de l'utilisateur";
+      var message = "Un problème est survenu lors de l'ajout du matériel";
       switch (error.message) {
         case 409: {
           message = "Cet email est déjà utilisé";
@@ -41,13 +41,13 @@ function AddModal(props) {
   });
 
   const onSubmit = () => {
-    const user = getValues("new");
-    const newUser = {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
+    const materiel = getValues("new");
+    console.log(materiel)
+    const newMateriel = {
+      name: materiel.name,
+      type: materiel.type,
     };
-    mutate(newUser);
+    mutate(newMateriel);
   };
 
   return (
@@ -71,36 +71,23 @@ function AddModal(props) {
     >
       <>
         <Typography variant="h4" align="center" sx={{ marginBottom: "10px" }}>
-          Nouvel utilisateur
+          Nouveau Matériel
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack>
             <TextField
               label="Nom"
               margin="normal"
-              error={!!errors?.new?.lastName}
-              helperText={errors?.new?.lastName?.message}
-              {...register("new.lastName", { required: "Champs requis" })}
+              error={!!errors?.new?.name}
+              helperText={errors?.new?.name?.message}
+              {...register("new.name", { required: "Champs requis" })}
             />
             <TextField
-              label="Prénom"
+              label="Type"
               margin="normal"
-              error={!!errors?.new?.firstName}
-              helperText={errors?.new?.firstName?.message}
-              {...register("new.firstName", { required: "Champs requis" })}
-            />
-            <TextField
-              label="Email"
-              margin="normal"
-              error={!!errors?.new?.email}
-              helperText={errors?.new?.email?.message}
-              {...register("new.email", {
-                required: "Champs requis",
-                pattern: {
-                  value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-                  message: "Le format n'est pas correct",
-                },
-              })}
+              error={!!errors?.new?.type}
+              helperText={errors?.new?.type?.message}
+              {...register("new.type", { required: "Champs requis" })}
             />
             <LoadingButton
               variant="contained"

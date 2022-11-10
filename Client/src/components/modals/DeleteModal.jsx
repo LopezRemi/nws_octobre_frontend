@@ -3,18 +3,20 @@ import { useMutation, useQueryClient } from "react-query";
 import { Button, Stack, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import Modal from "react-modal";
-import { deleteUser } from "../../service";
+import { deleteMaterial } from "../../service";
+import { fetchAllMaterials } from "../../service";
 
 function DeleteModal(props) {
-  const { open, setOpen, delUser, notify } = props;
+  const { open, setOpen, delMaterial, notify } = props;
 
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading } = useMutation(deleteUser, {
+  const { mutate, isLoading } = useMutation(deleteMaterial, {
     onSuccess: () => {
-      queryClient.invalidateQueries("allUsers");
+      queryClient.invalidateQueries("allMaterials");
       setOpen(false);
-      notify("success", "L'utilisateur a bien été supprimé");
+      notify("success", "Ce matériel a bien été supprimé");
+      fetchAllMaterials()
     },
     onError: () => {
       setOpen(false);
@@ -22,7 +24,9 @@ function DeleteModal(props) {
     },
   });
 
-  const onSubmit = () => mutate(delUser.id);
+  const onSubmit = () => {
+    mutate(delMaterial._id);
+  };
 
   return (
     <Modal
@@ -44,7 +48,7 @@ function DeleteModal(props) {
     >
       <>
         <Typography variant="h4" align="center" sx={{ marginBottom: "10px" }}>
-          Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+          Êtes-vous sûr de vouloir supprimer ce Materiel ?
         </Typography>
         <Stack
           direction="row"
