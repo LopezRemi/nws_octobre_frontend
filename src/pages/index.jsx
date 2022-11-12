@@ -1,2 +1,2 @@
 export { default as NotFound } from "./NotFound";
-export { default as UserList } from "./UserList";
+export { default as MaterialList } from "./MaterialList";

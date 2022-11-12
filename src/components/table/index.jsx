@@ -1,2 +1,2 @@
 export { default as Pagination } from "./Pagination";
-export { default as UserTable } from "./mainTable";
+export { default as UserTable } from "./MainTable";

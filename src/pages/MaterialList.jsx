@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { UserTable } from "../components/table";
@@ -7,8 +6,8 @@ import Top from "../components/header/Top";
 import { AddModal } from "../components/modals";
 import { Snack } from "../components/snackbars";
 
-function UserList() {
-  const navigate = useNavigate();
+function MaterialList() {
+  
 
   const [open, setOpen] = useState(false);
   const [openSnack, setOpenSnack] = useState(false);
@@ -59,4 +58,4 @@ function UserList() {
   );
 }
 
-export default UserList;
+export default MaterialList;

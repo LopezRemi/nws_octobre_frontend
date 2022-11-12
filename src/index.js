@@ -3,8 +3,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { render } from "react-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
-import App from "./App";
-import { NotFound, UserList } from "./pages";
+import { NotFound, MaterialList } from "./pages";
 import reportWebVitals from "./reportWebVitals";
 
 const queryClient = new QueryClient();
@@ -13,8 +12,7 @@ render(
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>
       <Routes>
-        <Route exact path="/" element={<UserList />} />
-        <Route exact path="/users" element={<UserList />} />
+        <Route exact path="/" element={<MaterialList />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

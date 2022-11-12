@@ -71,7 +71,6 @@ function MainTable() {
     data: materials,
   } = useQuery("allMaterials", fetchAllMaterials, { placeholderData: [] });
 
-  const connectedUser = JSON.parse(localStorage.getItem("user"));
 
   const rowHeight = document.getElementsByTagName("tr").item(1)?.offsetHeight;
 
@@ -235,7 +234,7 @@ function MainTable() {
         </Grid>
       </Grid>
 
-      {/* {editUser !== undefined && ( */}
+      {/* {editMaterial !== undefined && ( */}
       <UpdateModal
         open={modalUpdate}
         setOpen={setModalUpdate}
