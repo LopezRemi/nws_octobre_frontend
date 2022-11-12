@@ -1,8 +1,8 @@
-import { Button, Grid, Typography } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
+
 function Top(props) {
-  const { backButton } = props;
   const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -20,18 +20,11 @@ function Top(props) {
       sx={{ mt: "1%", width: "95%", mx: "auto" }}
     >
       <Grid item>
-        {backButton && (
-          <Button variant="contained" onClick={() => navigate("/")}>
-            Retour
-          </Button>
-        )}
+      <img src='https://upload.wikimedia.org/wikipedia/commons/d/dd/Logo_nws.png' alt="" style={{ width: 250, height: 100, }}></img>
       </Grid>
       <Grid item justifyContent="flex-end">
         {localStorage.getItem("fake-token") !== null && user !== null && (
           <>
-            <Typography variant="body">
-              Bonjour {user.firstName} {user.lastName}
-            </Typography>
             <Button
               variant="contained"
               onClick={onDisconnect}

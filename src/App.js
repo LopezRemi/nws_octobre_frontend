@@ -1,12 +1,9 @@
 import "./App.css";
 import { useNavigate } from "react-router-dom";
-import { Button, Grid, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import Top from "./components/header/Top";
 
 function App() {
-  const navigate = useNavigate();
-
-  const fakeToken = localStorage.getItem("fake-token");
 
   return (
     <>
