@@ -21,7 +21,7 @@ import { makeStyles } from "@mui/styles";
 import { Edit, Delete } from "@mui/icons-material";
 import { fetchAllMaterials } from "../../service";
 import { Snack } from "../snackbars";
-import { UpdateModal, DeleteModal } from "../modals";
+import { UpdateModal, DeleteModal, LoanersModal } from "../modals";
 import Pagination from "./Pagination";
 
 const TCell = styled(TableCell)(({ theme }) => ({
@@ -57,9 +57,11 @@ function MainTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [editMaterial, seteditMaterial] = useState();
   const [delMaterial, setDelMaterial] = useState();
+  const [createLoaners, setLoaner] = useState();
   const [open, setOpen] = useState(false);
   const [type, setType] = useState("success");
   const [message, setMessage] = useState("");
+  const [modalCreate, setModalCreate] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
   const [order, setOrder] = useState("asc");
@@ -89,6 +91,11 @@ function MainTable() {
     setType(type);
     setMessage(message);
   };
+
+  const setLoaners = (loaners) => {
+    setLoaner(loaners);
+    setModalCreate(true);
+  }
 
   const onUpdate = (material) => {
     seteditMaterial(material);
@@ -175,16 +182,16 @@ function MainTable() {
                             page * rowsPerPage + rowsPerPage
                           )
                     : materials
-                  ).map((material) => (
+                  ).map((material, loaners) => (
                     <TableRow
                       hover
                       key={material._id}
                     >
                       <TableCell>{material.name}</TableCell>
                       <TableCell>{material.type}</TableCell>
-                      <TableCell></TableCell>
+                      <TableCell>{material.isLoaned ? "oui" : "non"}</TableCell>
                       <TableCell align="right">
-                      <IconButton color="success" >
+                      <IconButton color="success" onClick={() => setLoaners(loaners)}>
                           Location
                         </IconButton>
                         <IconButton color="info" onClick={() => onUpdate(material)}>
@@ -234,6 +241,8 @@ function MainTable() {
         </Grid>
       </Grid>
 
+
+
       {/* {editMaterial !== undefined && ( */}
       <UpdateModal
         open={modalUpdate}
@@ -247,6 +256,13 @@ function MainTable() {
         open={modalDelete}
         setOpen={setModalDelete}
         delMaterial={delMaterial}
+        notify={notify}
+      />
+
+      <LoanersModal
+        open={modalCreate}
+        setOpen={setModalCreate}
+        createLoaners={createLoaners}
         notify={notify}
       />
 
