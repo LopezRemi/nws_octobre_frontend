@@ -19,10 +19,11 @@ import { visuallyHidden } from "@mui/utils";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import { Edit, Delete } from "@mui/icons-material";
-import { fetchAllMaterials } from "../../service";
+import { fetchAllMaterials, getLoanerByMaterial, deleteLoans } from "../../service";
 import { Snack } from "../snackbars";
 import { UpdateModal, DeleteModal, LoanersModal } from "../modals";
 import Pagination from "./Pagination";
+import TableDataAsync from "./TableDataAsync";
 
 const TCell = styled(TableCell)(({ theme }) => ({
   // tablehead cells only
@@ -81,6 +82,8 @@ function MainTable() {
 
   const handleChangePage = (event, newPage) => setPage(newPage);
 
+  const [currentId, setCurrentId] = useState("");
+
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -92,10 +95,11 @@ function MainTable() {
     setMessage(message);
   };
 
-  const setLoaners = (loaners) => {
+  const setLoaners = (loaners,id) => {
     setLoaner(loaners);
+    setCurrentId(id)
     setModalCreate(true);
-  }
+  };
 
   const onUpdate = (material) => {
     seteditMaterial(material);
@@ -152,7 +156,10 @@ function MainTable() {
                     ) : null}
                   </TableSortLabel>
                 </TCell>
-                <TCell>type</TCell>
+                <TCell>type</TCell>                
+                <TCell>Emprunteur</TCell>
+                <TCell>date d'emprunt</TCell>
+                <TCell>date de retour </TCell>
                 <TCell>Loué</TCell>
                 <TCell />
               </TableRow>
@@ -189,10 +196,13 @@ function MainTable() {
                     >
                       <TableCell>{material.name}</TableCell>
                       <TableCell>{material.type}</TableCell>
+                      <TableCell><TableDataAsync _id = {material._id} getFunction = {getLoanerByMaterial} property = "name"/></TableCell>
+                      <TableCell><TableDataAsync _id = {material._id} getFunction = {getLoanerByMaterial} property = "createdAt"/></TableCell>
+                      <TableCell><TableDataAsync _id = {material._id} getFunction = {getLoanerByMaterial} property = "returnDate"/></TableCell>
                       <TableCell>{material.isLoaned ? "oui" : "non"}</TableCell>
                       <TableCell align="right">
-                      <IconButton color="success" onClick={() => setLoaners(loaners)}>
-                          Location
+                      <IconButton color="success" onClick={() => {if (material.isLoaned){ deleteLoans(loaners._id)} else{setLoaners(loaners,material._id)}}}>
+                          {material.isLoaned ? "Rendre" : "Louer"}
                         </IconButton>
                         <IconButton color="info" onClick={() => onUpdate(material)}>
                           <Edit />
@@ -264,6 +274,7 @@ function MainTable() {
         setOpen={setModalCreate}
         createLoaners={createLoaners}
         notify={notify}
+        materialId={currentId}
       />
 
       <Snack open={open} setOpen={setOpen} type={type} message={message} />

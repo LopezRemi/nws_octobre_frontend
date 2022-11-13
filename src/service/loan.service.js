@@ -10,3 +10,4 @@ export const createLoans = async (Loans) => {
       throw error;
     }
   };
+

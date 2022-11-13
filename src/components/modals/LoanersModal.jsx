@@ -13,7 +13,7 @@ function LoanersModal(props) {
 
   const { mutate, isLoading } = useMutation(createLoaners, {
     onSuccess: () => {
-      queryClient.invalidateQueries("");
+      queryClient.invalidateQueries("allMaterials");
       setOpen(false);
       notify("success", "Location ajouté");
     },
@@ -46,6 +46,7 @@ function LoanersModal(props) {
     const newLoaners = {
       name: loaners.name,
       email: loaners.email,
+      loanedMaterial: props.materialId,
     };
     mutate(newLoaners);
   };
