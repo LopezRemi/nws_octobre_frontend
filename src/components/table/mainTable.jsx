@@ -19,10 +19,11 @@ import { visuallyHidden } from "@mui/utils";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import { Edit, Delete } from "@mui/icons-material";
-import { fetchAllMaterials } from "../../service";
+import { fetchAllMaterials, getLoanerByMaterial, deleteLoans } from "../../service";
 import { Snack } from "../snackbars";
-import { UpdateModal, DeleteModal } from "../modals";
+import { UpdateModal, DeleteModal, LoanersModal, LoanerDeleteModal } from "../modals";
 import Pagination from "./Pagination";
+import TableDataAsync from "./TableDataAsync";
 
 const TCell = styled(TableCell)(({ theme }) => ({
   // tablehead cells only
@@ -57,11 +58,15 @@ function MainTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [editMaterial, seteditMaterial] = useState();
   const [delMaterial, setDelMaterial] = useState();
+  const [delLoaner, setDelLoaner] = useState();
+  const [createLoaners, setLoaner] = useState();
   const [open, setOpen] = useState(false);
   const [type, setType] = useState("success");
   const [message, setMessage] = useState("");
+  const [modalCreate, setModalCreate] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
+  const [loanerDelete, setLoanerModalDelete] = useState(false);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("Nom");
 
@@ -71,7 +76,6 @@ function MainTable() {
     data: materials,
   } = useQuery("allMaterials", fetchAllMaterials, { placeholderData: [] });
 
-  const connectedUser = JSON.parse(localStorage.getItem("user"));
 
   const rowHeight = document.getElementsByTagName("tr").item(1)?.offsetHeight;
 
@@ -79,6 +83,8 @@ function MainTable() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - materials.length) : 0;
 
   const handleChangePage = (event, newPage) => setPage(newPage);
+
+  const [currentId, setCurrentId] = useState("");
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -91,6 +97,12 @@ function MainTable() {
     setMessage(message);
   };
 
+  const setLoaners = (loaners,id) => {
+    setLoaner(loaners);
+    setCurrentId(id)
+    setModalCreate(true);
+  };
+
   const onUpdate = (material) => {
     seteditMaterial(material);
     setModalUpdate(true);
@@ -99,6 +111,11 @@ function MainTable() {
   const onDelete = (material) => {
     setDelMaterial(material);
     setModalDelete(true);
+  };
+
+  const deleteLoaner = (loaners) => {
+    setDelLoaner(loaners);
+    setLoanerModalDelete(true);
   };
 
   const handleRequestSort = (event, property) => {
@@ -146,7 +163,10 @@ function MainTable() {
                     ) : null}
                   </TableSortLabel>
                 </TCell>
-                <TCell>type</TCell>
+                <TCell>type</TCell>                
+                <TCell>Emprunteur</TCell>
+                <TCell>date d'emprunt</TCell>
+                <TCell>date de retour </TCell>
                 <TCell>Loué</TCell>
                 <TCell />
               </TableRow>
@@ -176,25 +196,31 @@ function MainTable() {
                             page * rowsPerPage + rowsPerPage
                           )
                     : materials
-                  ).map((material) => (
+                  ).map((material, loaners) => (
                     <TableRow
                       hover
                       key={material._id}
                     >
                       <TableCell>{material.name}</TableCell>
                       <TableCell>{material.type}</TableCell>
-                      <TableCell></TableCell>
+                      <TableCell><TableDataAsync _id = {material._id} getFunction = {getLoanerByMaterial} property = "name"/></TableCell>
+                      <TableCell><TableDataAsync _id = {material._id} getFunction = {getLoanerByMaterial} property = "createdAt"/></TableCell>
+                      <TableCell><TableDataAsync _id = {material._id} getFunction = {getLoanerByMaterial} property = "returnDate"/></TableCell>
+                      <TableCell>{material.isLoaned ? "oui" : "non"}</TableCell>
                       <TableCell align="right">
-                      <IconButton color="success" >
-                          Location
-                        </IconButton>
-                        <IconButton color="info" onClick={() => onUpdate(material)}>
+                      <IconButton color="success" onClick={() => {}}>
+                          {material.isLoaned ? "Rendre" : ""}
+                      </IconButton>
+                      <IconButton color="success" onClick={() => 
+                         setLoaners(loaners,material._id)}>
+                        {material.isLoaned ? "" : "Louer"}
+                      </IconButton>  
+                      <IconButton color="info" onClick={() => onUpdate(material)}>
                           <Edit />
-                        </IconButton>
-                        <IconButton
-                          color="error"
-                          onClick={() => onDelete(material)}
-                        >
+                      </IconButton>
+                      <IconButton
+                        color="error"
+                        onClick={() => onDelete(material)}>
                           <Delete />
                         </IconButton>
                       </TableCell>
@@ -235,7 +261,9 @@ function MainTable() {
         </Grid>
       </Grid>
 
-      {/* {editUser !== undefined && ( */}
+
+
+      {/* {editMaterial !== undefined && ( */}
       <UpdateModal
         open={modalUpdate}
         setOpen={setModalUpdate}
@@ -250,6 +278,22 @@ function MainTable() {
         delMaterial={delMaterial}
         notify={notify}
       />
+
+      <LoanersModal
+        open={modalCreate}
+        setOpen={setModalCreate}
+        createLoaners={createLoaners}
+        notify={notify}
+        materialId={currentId}
+      />
+
+      <LoanerDeleteModal
+        open={loanerDelete}
+        setOpen={setLoanerModalDelete}
+        delMaterial={delLoaner}
+        notify={notify}
+      />
+
 
       <Snack open={open} setOpen={setOpen} type={type} message={message} />
     </>

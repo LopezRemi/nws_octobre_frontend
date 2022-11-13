@@ -4,21 +4,21 @@ import { Stack, TextField, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import Modal from "react-modal";
 import { useForm } from "react-hook-form";
-import { createMaterial } from "../../service";
+import { createLoaners } from "../../service";
 
-function AddModal(props) {
+function LoanersModal(props) {
   const { open, setOpen, notify } = props;
 
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading } = useMutation(createMaterial, {
+  const { mutate, isLoading } = useMutation(createLoaners, {
     onSuccess: () => {
       queryClient.invalidateQueries("allMaterials");
       setOpen(false);
-      notify("success", "Matériel ajouté");
+      notify("success", "Location ajouté");
     },
     onError: (error) => {
-      var message = "Un problème est survenu lors de l'ajout du matériel";
+      var message = "Un problème est survenu lors de la création de la location";
       switch (error.message) {
         case 409: {
           message = "Cet email est déjà utilisé";
@@ -41,12 +41,14 @@ function AddModal(props) {
   });
 
   const onSubmit = () => {
-    const materiel = getValues("new");
-    const newMateriel = {
-      name: materiel.name,
-      type: materiel.type,
+    const loaners = getValues("new");
+    console.log(loaners)
+    const newLoaners = {
+      name: loaners.name,
+      email: loaners.email,
+      loanedMaterial: props.materialId,
     };
-    mutate(newMateriel);
+    mutate(newLoaners);
   };
 
   return (
@@ -70,7 +72,7 @@ function AddModal(props) {
     >
       <>
         <Typography variant="h4" align="center" sx={{ marginBottom: "10px" }}>
-          Nouveau Matériel
+          C'est qui qui loue ?
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack>
@@ -82,11 +84,11 @@ function AddModal(props) {
               {...register("new.name", { required: "Champs requis" })}
             />
             <TextField
-              label="Type"
+              label="Email"
               margin="normal"
-              error={!!errors?.new?.type}
-              helperText={errors?.new?.type?.message}
-              {...register("new.type", { required: "Champs requis" })}
+              error={!!errors?.new?.email}
+              helperText={errors?.new?.email?.message}
+              {...register("new.email", { required: "Champs requis" })}
             />
             <LoadingButton
               variant="contained"
@@ -104,4 +106,4 @@ function AddModal(props) {
   );
 }
 
-export default AddModal;
+export default LoanersModal;
