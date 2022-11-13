@@ -7,11 +7,10 @@ export default function TableDataAsync({_id,getFunction,property}) {
     useEffect(() => {
         getFunction({materialId:_id}).then((res)=> {
             setData(res.data)
-            console.log(res)
         })
     },[])
 
-   return (
+    return (
         <>{
             (data.length > 0) && 
             <div> {data[0][property]}

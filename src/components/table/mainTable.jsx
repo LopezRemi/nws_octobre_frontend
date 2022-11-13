@@ -21,7 +21,7 @@ import { makeStyles } from "@mui/styles";
 import { Edit, Delete } from "@mui/icons-material";
 import { fetchAllMaterials, getLoanerByMaterial, deleteLoans } from "../../service";
 import { Snack } from "../snackbars";
-import { UpdateModal, DeleteModal, LoanersModal } from "../modals";
+import { UpdateModal, DeleteModal, LoanersModal, LoanerDeleteModal } from "../modals";
 import Pagination from "./Pagination";
 import TableDataAsync from "./TableDataAsync";
 
@@ -58,6 +58,7 @@ function MainTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [editMaterial, seteditMaterial] = useState();
   const [delMaterial, setDelMaterial] = useState();
+  const [delLoaner, setDelLoaner] = useState();
   const [createLoaners, setLoaner] = useState();
   const [open, setOpen] = useState(false);
   const [type, setType] = useState("success");
@@ -65,6 +66,7 @@ function MainTable() {
   const [modalCreate, setModalCreate] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
+  const [loanerDelete, setLoanerModalDelete] = useState(false);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("Nom");
 
@@ -109,6 +111,11 @@ function MainTable() {
   const onDelete = (material) => {
     setDelMaterial(material);
     setModalDelete(true);
+  };
+
+  const deleteLoaner = (loaners) => {
+    setDelLoaner(loaners);
+    setLoanerModalDelete(true);
   };
 
   const handleRequestSort = (event, property) => {
@@ -201,16 +208,19 @@ function MainTable() {
                       <TableCell><TableDataAsync _id = {material._id} getFunction = {getLoanerByMaterial} property = "returnDate"/></TableCell>
                       <TableCell>{material.isLoaned ? "oui" : "non"}</TableCell>
                       <TableCell align="right">
-                      <IconButton color="success" onClick={() => {if (material.isLoaned){ deleteLoans(loaners._id)} else{setLoaners(loaners,material._id)}}}>
-                          {material.isLoaned ? "Rendre" : "Louer"}
-                        </IconButton>
-                        <IconButton color="info" onClick={() => onUpdate(material)}>
+                      <IconButton color="success" onClick={() => {}}>
+                          {material.isLoaned ? "Rendre" : ""}
+                      </IconButton>
+                      <IconButton color="success" onClick={() => 
+                         setLoaners(loaners,material._id)}>
+                        {material.isLoaned ? "" : "Louer"}
+                      </IconButton>  
+                      <IconButton color="info" onClick={() => onUpdate(material)}>
                           <Edit />
-                        </IconButton>
-                        <IconButton
-                          color="error"
-                          onClick={() => onDelete(material)}
-                        >
+                      </IconButton>
+                      <IconButton
+                        color="error"
+                        onClick={() => onDelete(material)}>
                           <Delete />
                         </IconButton>
                       </TableCell>
@@ -276,6 +286,14 @@ function MainTable() {
         notify={notify}
         materialId={currentId}
       />
+
+      <LoanerDeleteModal
+        open={loanerDelete}
+        setOpen={setLoanerModalDelete}
+        delMaterial={delLoaner}
+        notify={notify}
+      />
+
 
       <Snack open={open} setOpen={setOpen} type={type} message={message} />
     </>

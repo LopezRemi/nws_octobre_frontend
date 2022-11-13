@@ -42,7 +42,6 @@ function AddModal(props) {
 
   const onSubmit = () => {
     const materiel = getValues("new");
-    console.log(materiel)
     const newMateriel = {
       name: materiel.name,
       type: materiel.type,
