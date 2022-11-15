@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "https://remi.iamroot.fr:8000";
+const url = "https://remi.iamroot.fr/api";
 
 export const fetchAllMaterials = async () => {
   try {
