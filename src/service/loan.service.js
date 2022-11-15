@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "http://localhost:8000";
+const url = "https://remi.iamroot.fr:8000";
 
 export const createLoans = async (Loans) => {
     try {
