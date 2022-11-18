@@ -15,6 +15,5 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: ghcr.io/lopezremi/nodejs:latest
+          tags: ghcr.io/lopezremi/nws_octobre_frontend/nodejs:latest
           target: nodejs
- 
