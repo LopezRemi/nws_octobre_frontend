@@ -30,7 +30,7 @@ function MaterialList() {
         align="center"
         sx={{ marginTop: "50px", marginBottom: "20px" }}
       >
-        Liste du Materiel
+        Liste du Materiel UWU
       </Typography>
       <Box textAlign="center" my="15px">
         <Button
